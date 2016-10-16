@@ -73,7 +73,15 @@ defmodule Readability do
   def summarize(url, opts \\ []) do
     opts = Keyword.merge(opts, [page_url: url])
     %{status_code: _, body: raw_html} = HTTPoison.get!(url)
-    html_tree = Helper.normalize(raw_html)
+    summarize_html(raw_html, opts)
+  end
+
+  @doc """
+  summarize the primary readable content of a html document.
+  """
+  @spec summarize_html(String.t, options) :: Summary.t
+  def summarize_html(html, opts \\ []) do
+    html_tree = Helper.normalize(html)
     article_tree = html_tree
                    |> ArticleBuilder.build(opts)
 
